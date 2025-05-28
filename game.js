@@ -9,12 +9,12 @@ const FLAP = -6;      // gentler flap
 const BIRD_X = 80;
 const BIRD_RADIUS = 20;
 const PIPE_WIDTH = 60;
-const INITIAL_PIPE_GAP = 200; // easier first pipes
-const MIN_PIPE_GAP = 120;     // minimum gap as difficulty increases
+const INITIAL_PIPE_GAP = 260; // easier first pipes (was 200)
+const MIN_PIPE_GAP = 180;     // minimum gap as difficulty increases (was 120)
 const PIPE_SPEED = 1.4;       // even slower pipes
 const GROUND_HEIGHT = 80;
-const INITIAL_PIPE_INTERVAL = 110; // pipes further apart at start
-const MIN_PIPE_INTERVAL = 70;      // minimum interval as difficulty increases
+const INITIAL_PIPE_INTERVAL = 140; // pipes further apart at start (was 110)
+const MIN_PIPE_INTERVAL = 100;      // minimum interval as difficulty increases (was 70)
 
 // Game state
 let birdY, birdVelocity, pipes, score, bestScore, frameCount, gameOver, gameStarted, pipeGap, pipeInterval;
@@ -43,62 +43,80 @@ function resetGame() {
 function drawBird() {
   ctx.save();
   ctx.translate(BIRD_X, birdY);
-  // Draw bag shadow
+
+  // Draw airplane shadow
   ctx.save();
   ctx.globalAlpha = 0.18;
   ctx.beginPath();
-  ctx.ellipse(0, 22, 15, 5, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 22, 18, 6, 0, 0, Math.PI * 2);
   ctx.fillStyle = '#222';
   ctx.fill();
   ctx.restore();
 
-  // Draw main bag body (angular, with left edge)
+  // Main fuselage (body)
   ctx.beginPath();
-  ctx.moveTo(-13, 18);
-  ctx.lineTo(-16, -8);
-  ctx.lineTo(-8, -18);
-  ctx.lineTo(8, -18);
-  ctx.lineTo(16, -8);
-  ctx.lineTo(13, 18);
-  ctx.closePath();
-  ctx.fillStyle = '#95BF47';
+  ctx.ellipse(0, 0, 22, 10, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#7DA7D9'; // blue-gray
   ctx.fill();
-  ctx.strokeStyle = '#5E8E3E';
   ctx.lineWidth = 2.2;
+  ctx.strokeStyle = '#4B6EAF';
   ctx.stroke();
 
-  // Left white vertical stripe
+  // Cockpit window
   ctx.beginPath();
-  ctx.moveTo(-13, 18);
-  ctx.lineTo(-16, -8);
-  ctx.lineTo(-13, -15);
-  ctx.lineTo(-10, 18);
-  ctx.closePath();
+  ctx.ellipse(10, -3, 6, 6, 0, 0, Math.PI * 2);
   ctx.fillStyle = '#fff';
-  ctx.globalAlpha = 0.7;
+  ctx.globalAlpha = 0.85;
   ctx.fill();
   ctx.globalAlpha = 1;
-
-  // Bag handle (rounded, white)
-  ctx.beginPath();
-  ctx.moveTo(-6, -15);
-  ctx.bezierCurveTo(-4, -22, 4, -22, 6, -15);
-  ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 2.5;
+  ctx.lineWidth = 1.2;
+  ctx.strokeStyle = '#B0D0F0';
   ctx.stroke();
 
-  // Draw bold white 'S'
+  // Left wing
   ctx.save();
-  ctx.translate(0, 2);
+  ctx.rotate(-0.18);
   ctx.beginPath();
-  ctx.moveTo(-5, 2);
-  ctx.bezierCurveTo(-5, -6, 7, -6, 7, 0);
-  ctx.bezierCurveTo(7, 7, -5, 7, -5, 13);
-  ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 4.2;
-  ctx.lineCap = 'round';
-  ctx.stroke();
+  ctx.moveTo(-4, 4);
+  ctx.lineTo(-28, 12);
+  ctx.lineTo(-24, 16);
+  ctx.lineTo(-2, 8);
+  ctx.closePath();
+  ctx.fillStyle = '#B0B0B0';
+  ctx.fill();
   ctx.restore();
+
+  // Right wing
+  ctx.save();
+  ctx.rotate(0.18);
+  ctx.beginPath();
+  ctx.moveTo(4, 4);
+  ctx.lineTo(28, 12);
+  ctx.lineTo(24, 16);
+  ctx.lineTo(2, 8);
+  ctx.closePath();
+  ctx.fillStyle = '#B0B0B0';
+  ctx.fill();
+  ctx.restore();
+
+  // Tail fin
+  ctx.beginPath();
+  ctx.moveTo(-18, -4);
+  ctx.lineTo(-26, -12);
+  ctx.lineTo(-16, -8);
+  ctx.closePath();
+  ctx.fillStyle = '#E94F37'; // red
+  ctx.fill();
+  ctx.strokeStyle = '#B0301B';
+  ctx.stroke();
+
+  // Nose cone
+  ctx.beginPath();
+  ctx.arc(22, 0, 4, Math.PI * 0.7, Math.PI * 1.3, false);
+  ctx.fillStyle = '#F6F6F7';
+  ctx.fill();
+  ctx.strokeStyle = '#B0B0B0';
+  ctx.stroke();
 
   ctx.restore();
 }
